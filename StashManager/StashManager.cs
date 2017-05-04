@@ -1,70 +1,36 @@
-﻿using System.Threading;
-using System.Windows.Forms;
-using PoeHUD.Controllers;
+﻿using System.Windows.Forms;
 using PoeHUD.Plugins;
-using SharpDX;
-using SharpDX.Direct3D9;
 using StashManager.Helper;
 
 namespace StashManager
 {
     public class StashManager : BasePlugin
     {
+        private const int NumberOfTotalStashes = 4; // Wanted to test if certain ammount of tabs could be a problem.
         public override void Render()
         {
+
             var stashPanel = GameController.Game.IngameState.ServerData.StashPanel;
             if (!stashPanel.IsVisible)
             {
                 return;
             }
-            /*_inventoryZone = _ingameState.ReadObject<Element>(_ingameState.IngameUi.InventoryPanel.Address + Element.OffsetBuffers + 0x42C);
             
-            foreach (var child in _inventoryZone.Children)
+            while (!IsAllStashTabsViewable((int) stashPanel.TotalStashes))
             {
-                var item = child.AsObject<NormalInventoryItem>().Item;
-                if (string.IsNullOrEmpty(item?.Path))
-                {
-                    continue;
-                }
-
-                var position = child.GetClientRect();
-                var itemName = item.Path.Split('/').Last();
-                // Let's draw a frame arround each item in our inventory.
-                Graphics.DrawFrame(position, 2f, Color.Azure);
-                Graphics.DrawText(itemName, 20, new Vector2(position.X, position.Y), Color.DarkCyan);
-            }
-            */
-
-            while (!IsAllStashTabsViewable())
-            {
-                ViewAllTabs((int)stashPanel.TotalStashes);
+                ViewAllTabs((int) stashPanel.TotalStashes);
             }
 
-            //MessageBox.Show(GameController.Game.IngameState.ServerData.StashPanel.getStashName(0));
-            ShowItemCountOfEachNonNullTab();
-
-            // Kinda works.
-            /*var titleElement = stashPanel.getStashTitleElement(stashPanel.getStashName(0));
-            var position = titleElement.GetClientRect();
-            Graphics.DrawFrame(titleElement.GetClientRect(), 10f, Color.Aqua);
-            Graphics.DrawText(titleElement.Children.Count.ToString(), 20, new Vector2(position.X, position.Y));*/
-
-            /*for (var i = 0; i < stashPanel.TotalStashes; i++)
-            {
-                var titleElement = stashPanel.getStashTitleElement(stashPanel.getStashName(i));
-                var position = titleElement.GetClientRect();
-                Graphics.DrawText(stashPanel.getStashName(i), 20, new Vector2(position.X, position.Y));
-            }*/
+            ShowItemCountOfEachNonNullTab((int) stashPanel.TotalStashes);
+            ShowNameOfEachNonNulLTab((int) stashPanel.TotalStashes);
         }
 
         #region tests
-        private void ShowItemCountOfEachNonNullTab()
+        private void ShowItemCountOfEachNonNullTab(int numberOfTotalStashes = NumberOfTotalStashes)
         {
             var stashPanel = GameController.Game.IngameState.ServerData.StashPanel;
-
-            var numberOfStashes = (int)stashPanel.TotalStashes;
             var content = "";
-            for (int i = 0; i < numberOfStashes; i++)
+            for (var i = 0; i < numberOfTotalStashes; i++)
             {
                 var stashTab = stashPanel.getStashInventory(i);
                 if (stashTab == null)
@@ -79,15 +45,13 @@ namespace StashManager
             MessageBox.Show(content);
         }
 
-        private void ShowNameOfEachNonNulLTab()
+        private void ShowNameOfEachNonNulLTab(int numberOfTotalStashes = NumberOfTotalStashes)
         {
             var stashPanel = GameController.Game.IngameState.ServerData.StashPanel;
 
-            var numberOfStashes = (int)stashPanel.TotalStashes;
-
             var content = "";
 
-            for (var i = 0; i < numberOfStashes; i++)
+            for (var i = 0; i < numberOfTotalStashes; i++)
             {
                 var tabName = stashPanel.getStashName(i);
                 if (tabName == null)
@@ -105,14 +69,14 @@ namespace StashManager
 
         #endregion
 
-        private bool IsAllStashTabsViewable()
+        private bool IsAllStashTabsViewable(int numberOfTotalStashes = NumberOfTotalStashes)
         {
             var stashPanel = GameController.Game.IngameState.ServerData.StashPanel;
             var counter = 0;
 
-            for (var i = 0; i < stashPanel.TotalStashes; i++)
+            for (var i = 0; i < numberOfTotalStashes; i++)
             {
-                if (stashPanel.getStashInventory(i) == null /*|| stashPanel.getStashName(i) == null*/)
+                if (stashPanel.getStashInventory(i) == null)
                 {
                     continue;
                 }
@@ -123,15 +87,15 @@ namespace StashManager
             return counter == stashPanel.TotalStashes;
         }
 
-        private static void ViewAllTabs(int ammountOfTabs)
+        private static void ViewAllTabs(int numberOfTotalStashes = NumberOfTotalStashes)
         {
-            for (var i = 0; i < ammountOfTabs; i++)
+            for (var i = 0; i < numberOfTotalStashes; i++)
             {
                 Keyboard.keybd_event(VirtualKeys.Right, 0, KeyboardEventFlags.Keydown, 0);
                 Keyboard.keybd_event(VirtualKeys.Right, 0, KeyboardEventFlags.Keyup, 0);
             }
 
-            for (var i = 0; i < ammountOfTabs; i++)
+            for (var i = 0; i < numberOfTotalStashes; i++)
             {
                 Keyboard.keybd_event(VirtualKeys.Left, 0, KeyboardEventFlags.Keydown, 0);
                 Keyboard.keybd_event(VirtualKeys.Left, 0, KeyboardEventFlags.Keyup, 0);

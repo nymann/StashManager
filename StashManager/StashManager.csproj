@@ -32,6 +32,10 @@
     <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="kvo8KH">
+      <HintPath>..\..\..\..\..\PoEHUD-x64\kvo8KH.exe</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="SharpDX">
       <HintPath>..\..\..\..\..\PoEHUD-x64\lib\SharpDX.dll</HintPath>
       <Private>False</Private>
@@ -43,9 +47,6 @@
     <Reference Include="SharpDX.Mathematics">
       <HintPath>..\..\..\..\..\PoEHUD-x64\lib\SharpDX.Mathematics.dll</HintPath>
       <Private>False</Private>
-    </Reference>
-    <Reference Include="sRz5Aasti">
-      <HintPath>..\..\..\..\..\PoEHUD-x64\sRz5Aasti.exe</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
