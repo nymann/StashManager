@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using System.Threading;
+using System.Windows.Forms;
 using PoeHUD.Plugins;
 using StashManager.Helper;
 
@@ -16,9 +17,9 @@ namespace StashManager
                 return;
             }
             
-            while (!IsAllStashTabsViewable((int) stashPanel.TotalStashes))
+            if (!IsAllStashTabsViewable((int) stashPanel.TotalStashes))
             {
-                ViewAllTabs((int) stashPanel.TotalStashes);
+                ViewAllTabs((int)GameController.Game.IngameState.CurLatency * 4, (int) stashPanel.TotalStashes);
             }
 
             ShowItemCountOfEachNonNullTab((int) stashPanel.TotalStashes);
@@ -87,18 +88,20 @@ namespace StashManager
             return counter == stashPanel.TotalStashes;
         }
 
-        private static void ViewAllTabs(int numberOfTotalStashes = NumberOfTotalStashes)
+        private static void ViewAllTabs(int delay, int numberOfTotalStashes = NumberOfTotalStashes)
         {
             for (var i = 0; i < numberOfTotalStashes; i++)
             {
                 Keyboard.keybd_event(VirtualKeys.Right, 0, KeyboardEventFlags.Keydown, 0);
                 Keyboard.keybd_event(VirtualKeys.Right, 0, KeyboardEventFlags.Keyup, 0);
+                Thread.Sleep(delay);
             }
 
             for (var i = 0; i < numberOfTotalStashes; i++)
             {
                 Keyboard.keybd_event(VirtualKeys.Left, 0, KeyboardEventFlags.Keydown, 0);
                 Keyboard.keybd_event(VirtualKeys.Left, 0, KeyboardEventFlags.Keyup, 0);
+                Thread.Sleep(delay);
             }
         }
     }
